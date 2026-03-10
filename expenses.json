@@ -1,0 +1,20 @@
+[
+  {
+    "date": "2026.03.05 ",
+    "amount": 8.78,
+    "category": "Ēdiens",
+    "description": "pusdienas"
+  },
+  {
+    "date": "2026.03.07",
+    "amount": 13.8,
+    "category": "Iepirkšanās",
+    "description": "siers maize desa"
+  },
+  {
+    "date": "2026-03-02",
+    "amount": 37.43,
+    "category": "Veselība",
+    "description": "medikamenti"
+  }
+]
