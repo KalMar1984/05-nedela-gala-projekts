@@ -1,3 +1,6 @@
+from export import export_to_csv  
+# Importē funkciju kas eksportē izdevumus CSV failā
+
 from storage import load_expenses, save_expenses  
 # Importē funkcijas datu ielādei un saglabāšanai
 
@@ -6,6 +9,7 @@ from logic import sum_total, filter_by_month, sum_by_category, get_available_mon
 
 from datetime import date  
 # Importē bibliotēku, kas ļauj iegūt šodienas datumu
+
 
 
 CATEGORIES = [  
@@ -31,28 +35,41 @@ def add_expense(expenses):
 
     if user_date == "":  
         # Pārbauda vai lietotājs neko neievadīja
-
         user_date = today  
         # Ja tukšs, izmanto šodienas datumu
 
     print("Kategorija:")  
     # Izdrukā tekstu terminālī
 
-    for i, cat in enumerate(CATEGORIES, 1):  
-        # enumerate piešķir katrai kategorijai numuru (sākot no 1)
+    # --- Droša kategorijas izvēle ---
+    while True:
+        # Cikls atkārtojas līdz lietotājs ievada pareizu kategorijas numuru
+        try:
+            cat_index = int(input("Izvēlies (1-7): ")) - 1
+            # Lietotājs ievada kategorijas numuru
+            if 0 <= cat_index < len(CATEGORIES):
+                break
+                # Pareiza ievade, cikls beidzas
+            else:
+                print("Nepareizs kategorijas numurs.")
+                # Parāda kļūdas ziņu, ja numurs nav sarakstā
+        except ValueError:
+            print("Lūdzu ievadi skaitli.")
+            # Parāda kļūdas ziņu, ja ievade nav skaitlis
 
-        print(f"{i}) {cat}")  
-        # Izdrukā kategoriju ar tās numuru
-
-    cat_index = int(input("Izvēlies (1-7): ")) - 1  
-    # Lietotājs ievada kategorijas numuru
-    # -1 nepieciešams, jo saraksta indekss sākas no 0
-
-    category = CATEGORIES[cat_index]  
+    category = CATEGORIES[cat_index]
     # No saraksta paņem izvēlēto kategoriju
 
-    amount = float(input("Summa (EUR): "))  
-    # Lietotājs ievada summu un tā tiek pārvērsta par skaitli
+    # --- Droša summas ievade ---
+    while True:
+        try:
+            amount = float(input("Summa (EUR): "))
+            # Lietotājs ievada summu
+            break
+            # Pareiza ievade, cikls beidzas
+        except ValueError:
+            print("Summai jābūt skaitlim.")
+            # Parāda kļūdas ziņu, ja ievade nav skaitlis
 
     description = input("Apraksts: ")  
     # Lietotājs ievada īsu aprakstu
@@ -80,10 +97,8 @@ def show_expenses(expenses):
 
     if len(expenses) == 0:  
         # Pārbauda vai saraksts ir tukšs
-
         print("Nav neviena izdevuma.")  
         # Ja tukšs, parāda ziņu
-
         return  
         # Beidz funkciju
 
@@ -95,7 +110,6 @@ def show_expenses(expenses):
 
     for e in expenses:  
         # Iet cauri visiem izdevumiem
-
         print(f"{e['date']}  {e['amount']:6.2f}  {e['category']:12} {e['description']}")  
         # Izdrukā vienu izdevuma rindu
 
@@ -114,10 +128,8 @@ def filter_menu(expenses):
 
     if len(months) == 0:
         # Pārbauda vai mēnešu saraksts ir tukšs
-
         print("Nav neviena izdevuma.")
         # Ja nav izdevumu, parāda ziņu
-
         return
         # Beidz funkciju
 
@@ -126,12 +138,22 @@ def filter_menu(expenses):
 
     for i, m in enumerate(months, 1):
         # Iet cauri visiem mēnešiem un piešķir tiem numuru
-
         print(f"{i}) {m}")
         # Izdrukā mēnesi ar numuru
 
-    choice = int(input("Izvēlies mēnesi: ")) - 1
-    # Lietotājs ievada mēneša numuru
+    # --- Droša mēneša izvēle ---
+    try:
+        choice = int(input("Izvēlies mēnesi: ")) - 1
+        # Lietotājs ievada mēneša numuru
+        if not (0 <= choice < len(months)):
+            print("Nepareizs mēneša numurs.")
+            return
+            # Ja nepareizs numurs, beidz funkciju
+    except ValueError:
+        print("Lūdzu ievadi skaitli.")
+        # Parāda kļūdas ziņu, ja ievade nav skaitlis
+        return
+        # Beidz funkciju
 
     selected_month = months[choice]
     # Saglabā izvēlēto mēnesi
@@ -144,7 +166,6 @@ def filter_menu(expenses):
 
     for e in filtered:
         # Iet cauri visiem filtrētajiem izdevumiem
-
         print(f"{e['date']} | {e['amount']:6.2f} EUR | {e['category']:12} | {e['description']}")
         # Izdrukā vienu izdevuma rindu
 
@@ -166,10 +187,8 @@ def category_summary(expenses):
 
     for cat, amount in summary.items():
         # Iet cauri vārdnīcai ar kategorijām un summām
-
         print(f"{cat:15} {amount:6.2f} EUR")
         # Izdrukā kategoriju un tās summu
-
         total += amount
         # Pieskaita summu kopējai summai
 
@@ -185,10 +204,8 @@ def delete_expense(expenses):
 
     if len(expenses) == 0:
         # Pārbauda vai nav izdevumu
-
         print("Nav neviena izdevuma.")
         # Ja nav izdevumu, parāda ziņu
-
         return
         # Beidz funkciju
 
@@ -197,16 +214,25 @@ def delete_expense(expenses):
 
     for i, e in enumerate(expenses, 1):
         # Iet cauri visiem izdevumiem un piešķir tiem numuru
-
         print(f"{i}) {e['date']} | {e['amount']:6.2f} EUR | {e['category']:12} | {e['description']}")
         # Izdrukā izdevumu sarakstu
 
-    choice = int(input("\nKuru dzēst? (numurs vai 0 lai atceltu): "))
-    # Lietotājs ievada kuru izdevumu dzēst
+    # --- Droša dzēšanas izvēle ---
+    try:
+        choice = int(input("\nKuru dzēst? (numurs vai 0 lai atceltu): "))
+        # Lietotājs ievada izdevuma numuru
+        if not (0 <= choice <= len(expenses)):
+            print("Nepareizs numurs.")
+            return
+            # Ja nepareizs numurs, beidz funkciju
+    except ValueError:
+        print("Lūdzu ievadi skaitli.")
+        # Parāda kļūdas ziņu, ja ievade nav skaitlis
+        return
+        # Beidz funkciju
 
     if choice == 0:
         # Ja lietotājs izvēlas 0
-
         return
         # Dzēšana tiek atcelta
 
@@ -217,7 +243,37 @@ def delete_expense(expenses):
     # Saglabā izmaiņas JSON failā
 
     print(f"✓ Dzēsts: {removed['date']} | {removed['amount']} EUR | {removed['category']} | {removed['description']}")
-    # Parāda ziņu ka izdevums dzēsts
+    # Parāda ziņu ka izdevums dzēsts 
+
+
+def export_menu(expenses):
+    # Funkcija ļauj lietotājam eksportēt izdevumus CSV failā
+
+    if len(expenses) == 0:
+        # Pārbauda vai izdevumu saraksts ir tukšs
+        print("Nav neviena izdevuma eksportēšanai.")
+        # Ja nav izdevumu, parāda ziņu
+        return
+        # Beidz funkciju
+
+    default_name = "izdevumi.csv"
+    # Izveido mainīgo ar noklusējuma faila nosaukumu
+
+    filename = input(f"Faila nosaukums [{default_name}]: ")
+    # Lietotājam prasa ievadīt faila nosaukumu
+    # Iekavās tiek parādīts noklusējuma nosaukums
+
+    if filename == "":
+        # Pārbauda vai lietotājs neko neievadīja
+        filename = default_name
+        # Ja tukšs, izmanto noklusējuma faila nosaukumu
+
+    count = export_to_csv(expenses, filename)
+    # Izsauc funkciju no export.py
+    # Funkcija izveido CSV failu un atgriež eksportēto ierakstu skaitu
+
+    print(f"✓ Eksportēts: {count} ieraksti -> {filename}")
+    # Parāda paziņojumu cik ieraksti eksportēti un kāds ir faila nosaukums
 
 
 def main():  
@@ -234,6 +290,7 @@ def main():
         print("3) Filtrēt pēc mēneša")
         print("4) Kopsavilkums pa kategorijām")
         print("5) Dzēst izdevumu")
+        print("6) Eksportēt CSV")
         print("7) Iziet")
 
         choice = input("\nIzvēlies: ")  
@@ -241,38 +298,31 @@ def main():
 
         if choice == "1":  
             add_expense(expenses)  
-            # Izsauc funkciju izdevuma pievienošanai
 
         elif choice == "2":  
             show_expenses(expenses)  
-            # Izsauc funkciju izdevumu parādīšanai
 
         elif choice == "3":
             filter_menu(expenses)
-            # Izsauc funkciju filtrēšanai pēc mēneša
 
         elif choice == "4":
             category_summary(expenses)
-            # Parāda kopsavilkumu pa kategorijām
 
         elif choice == "5":
             delete_expense(expenses)
-            # Izsauc funkciju izdevuma dzēšanai
+
+        elif choice == "6":
+            export_menu(expenses)
 
         elif choice == "7":  
             print("Programma beidzas.")  
-            # Parāda ziņu
-
             break  
-            # Iziet no cikla un beidz programmu
 
         else:  
             print("Nepareiza izvēle.")  
-            # Ja ievadīts nepareizs numurs
 
 
 if __name__ == "__main__":  
     # Pārbauda vai fails tiek palaists tieši
-
     main()  
-    # Palaiž galveno programmas funkciju
+    # Palaiž galveno programmas funkciju main
