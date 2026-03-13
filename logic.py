@@ -9,10 +9,12 @@ def sum_total(expenses):
         amount = e.get("amount", 0)
         # Droša piekļuve summas laukam, ja lauks nav definēts, izmanto 0
 
-        if isinstance(amount, (int, float)):
+        try:
+            amount = float(amount)
+            # Pārvērš summu par skaitli (ja tā bija teksts)
             total += amount
             # Pieskaita izdevuma summu kopējai summai tikai, ja tā ir skaitlis
-        else:
+        except (ValueError, TypeError):
             print(f"Brīdinājums: nederīga summa {amount} izdevumā {e}")
             # Ja summa nav skaitlis, parāda brīdinājumu
 
@@ -28,7 +30,7 @@ def filter_by_month(expenses, year_month):
 
     for e in expenses:
         # Iet cauri katram izdevumam sarakstā
-        date_str = str(e.get("date", ""))
+        date_str = str(e.get("date", "")).strip()
         # Droša piekļuve datuma laukam, ja nav, izmanto tukšu stringu
 
         if date_str.startswith(year_month):
@@ -62,10 +64,12 @@ def sum_by_category(expenses):
             result[cat] = 0
             # Ja kategorijas vēl nav, izveido to ar sākuma summu 0
 
-        if isinstance(amount, (int, float)):
+        try:
+            amount = float(amount)
+            # Pārvērš summu par skaitli (ja tā bija teksts)
             result[cat] += amount
             # Pieskaita izdevuma summu šai kategorijai tikai, ja tā ir skaitlis
-        else:
+        except (ValueError, TypeError):
             print(f"Brīdinājums: nederīga summa {amount} izdevumā {e}")
             # Ja summa nav skaitlis, parāda brīdinājumu
 
@@ -81,7 +85,7 @@ def get_available_months(expenses):
 
     for e in expenses:
         # Iet cauri visiem izdevumiem
-        date_str = str(e.get("date", ""))
+        date_str = str(e.get("date", "")).strip()
         # Droša piekļuve datuma laukam, ja nav, izmanto tukšu stringu
 
         if len(date_str) >= 7:

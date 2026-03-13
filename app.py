@@ -1,4 +1,5 @@
-from export import export_to_csv  
+# -*- coding: utf-8 -*-
+from export import export_csv  
 # Importē funkciju kas eksportē izdevumus CSV failā
 
 from storage import load_expenses, save_expenses  
@@ -38,8 +39,11 @@ def add_expense(expenses):
         user_date = today  
         # Ja tukšs, izmanto šodienas datumu
 
-    print("Kategorija:")  
+        print("Kategorija:")     
     # Izdrukā tekstu terminālī
+
+    for i, cat in enumerate(CATEGORIES, 1):
+        print(f"{i}) {cat}")
 
     # --- Droša kategorijas izvēle ---
     while True:
@@ -268,7 +272,7 @@ def export_menu(expenses):
         filename = default_name
         # Ja tukšs, izmanto noklusējuma faila nosaukumu
 
-    count = export_to_csv(expenses, filename)
+    count = export_csv(expenses, filename)
     # Izsauc funkciju no export.py
     # Funkcija izveido CSV failu un atgriež eksportēto ierakstu skaitu
 
@@ -280,11 +284,19 @@ def main():
     # Galvenā programmas funkcija
 
     expenses = load_expenses()  
-    # Ielādē izdevumus no JSON faila
+    # Ielādē izdevumus no JSON faila 
+
+    title = """
+═════════════════════════════════
+     Izdevumu izsekotājs
+═════════════════════════════════
+"""
 
     while True:  
         # Bezgalīgs cikls izvēlnei
 
+        print(title)    
+        
         print("\n1) Pievienot izdevumu")  
         print("2) Parādīt izdevumus")
         print("3) Filtrēt pēc mēneša")

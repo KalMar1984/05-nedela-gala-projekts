@@ -16,5 +16,23 @@
     "amount": 37.43,
     "category": "Veselība",
     "description": "medikamenti"
+  },
+  {
+    "date": "2026-03-13",
+    "amount": 25.0,
+    "category": "Cits",
+    "description": "saimnieciskie izdevumi "
+  },
+  {
+    "date": "2026-03-13",
+    "amount": 15.0,
+    "category": "Transports",
+    "description": "e-talons mēnešbiļete"
+  },
+  {
+    "date": "2026-03-13",
+    "amount": 280.0,
+    "category": "Komunālie maksājumi",
+    "description": "par dzīvokli"
   }
 ]

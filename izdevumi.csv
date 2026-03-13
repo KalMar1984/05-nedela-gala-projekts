@@ -1,0 +1,12 @@
+Date,Amount,Category,Description
+2026.03.05 ,8.78,Ēdiens,pusdienas
+2026.03.07,13.8,Iepirkšanās,siers maize desa
+2026-03-02,37.43,Veselība,medikamenti
+Maize 1.50,1.5,Transports,maize 1.50
+Pārtika,1.5,Transports,pārtika
+pārtika,5.0,Transports,medikamenti
+tehnika,7.5,Transports,tehnika skrūves
+"1,5",1.5,Ēdiens,Maize
+2,1.0,Ēdiens,1
+maize ,1.5,Ēdiens,Pārtika
+2,7.0,Izklaide,7
